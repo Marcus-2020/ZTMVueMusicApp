@@ -1,7 +1,7 @@
 <template>
   <!-- Auth Modal -->
   <div class="fixed z-10 inset-0 overflow-y-auto" id="modal"
-    :class="{ hidden: !authModalShow }">
+    :class="{ hidden: !this.authModalShow }">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center
       sm:block sm:p-0">
       <div class="fixed inset-0 transition-opacity">
@@ -20,7 +20,7 @@
           <div class="flex justify-between items-center pb-4">
             <p class="text-2xl font-bold">Your Account</p>
             <!-- Modal Close Button -->
-            <div class="modal-close cursor-pointer z-50">
+            <div class="modal-close cursor-pointer z-50" @click.prevent="this.toggleAuthModal">
               <i class="fas fa-times"></i>
             </div>
           </div>
@@ -28,122 +28,31 @@
           <!-- Tabs -->
           <ul class="flex flex-wrap mb-4">
             <li class="flex-auto text-center">
-              <a class="block rounded py-3 px-4 transition hover:text-white text-white
-                bg-blue-600" href="#">Login</a>
+              <a class="block rounded py-3 px-4 transition"
+                 href="#" @click.prevent="this.tab = 'login'"
+                :class="{
+                  'hover:text-white text-white bg-blue-600': this.tab === 'login',
+                  'hover:text-blue-600': this.tab === 'register'
+                }">
+                Login
+              </a>
             </li>
             <li class="flex-auto text-center">
               <a class="block rounded py-3 px-4 transition"
-                 href="#">Register</a>
+                 href="#" @click.prevent="this.tab = 'register'"
+                 :class="{
+                   'hover:text-white text-white bg-blue-600': this.tab === 'register',
+                   'hover:text-blue-600': this.tab === 'login'
+                 }">
+                Register
+              </a>
             </li>
           </ul>
 
           <!-- Login Form -->
-          <form>
-            <!-- Email -->
-            <div class="mb-3">
-              <label for="login-email" class="inline-block mb-2">
-                Email
-                <input id="login-email" type="email"
-                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
-                  duration-500 focus:outline-none focus:border-black rounded"
-                  placeholder="Enter Email"/>
-              </label>
-            </div>
-            <!-- Password -->
-            <div class="mb-3">
-              <label for="login-password" class="inline-block mb-2">
-                Password
-                <input id="login-password" type="password"
-                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
-                  duration-500 focus:outline-none focus:border-black rounded"
-                       placeholder="Password"/>
-              </label>
-            </div>
-            <button type="submit"
-                    class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition
-                hover:bg-purple-700">
-              Submit
-            </button>
-          </form>
+          <app-login-form v-if="tab === 'login'" />
           <!-- Registration Form -->
-          <form>
-            <!-- Name -->
-            <div class="mb-3">
-              <label for="register-name" class="inline-block mb-2">
-                Name
-                <input id="register-name" type="text"
-                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
-                  duration-500 focus:outline-none focus:border-black rounded"
-                       placeholder="Enter Name"/>
-              </label>
-            </div>
-            <!-- Email -->
-            <div class="mb-3">
-              <label for="register-email" class="inline-block mb-2">
-                Email
-                <input id="register-email" type="email"
-                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
-                  duration-500 focus:outline-none focus:border-black rounded"
-                       placeholder="Enter Email"/>
-              </label>
-            </div>
-            <!-- Age -->
-            <div class="mb-3">
-              <label for="register-age" class="inline-block mb-2">
-                Age
-                <input id="register-age" type="number"
-                   class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
-                  duration-500 focus:outline-none focus:border-black rounded"/>
-              </label>
-            </div>
-            <!-- Password -->
-            <div class="mb-3">
-              <label for="register-password" class="inline-block mb-2">
-                Password
-                <input id="register-password" type="password"
-                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
-                  duration-500 focus:outline-none focus:border-black rounded"
-                       placeholder="Password"/>
-              </label>
-            </div>
-            <!-- Confirm Password -->
-            <div class="mb-3">
-              <label for="register-confirm-password" class="inline-block mb-2">
-                Confirm Password
-                <input id="register-confirm-password" type="password"
-                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
-                  duration-500 focus:outline-none focus:border-black rounded"
-                       placeholder="Confirm Password"/>
-              </label>
-            </div>
-            <!-- Country -->
-            <div class="mb-3">
-              <label for="register-country" class="inline-block mb-2">
-                Country
-                <select id="register-country"
-                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
-                  duration-500 focus:outline-none focus:border-black rounded">
-                  <option value="USA">USA</option>
-                  <option value="Mexico">Mexico</option>
-                  <option value="Germany">Germany</option>
-                </select>
-              </label>
-            </div>
-            <!-- TOS -->
-            <div class="mb-3 pl-6">
-              <label for="register-terms-of-service" class="inline-block">
-                <input id="register-terms-of-service"
-                       type="checkbox"
-                       class="w-4 h-4 float-left -ml-6 mt-1 rounded"/>
-                Accept terms of service
-              </label>
-            </div>
-            <button type="submit"
-                    class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition
-                hover:bg-purple-700">
-              Submit
-            </button>
-          </form>
+          <app-register-form v-else />
         </div>
       </div>
     </div>
@@ -151,12 +60,29 @@
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex';
+import AppLoginForm from './LoginForm.vue';
+import AppRegisterForm from './RegisterForm.vue';
+
 export default {
   name: 'AuthModal',
+  components: {
+    AppLoginForm,
+    AppRegisterForm,
+  },
+  data() {
+    return {
+      tab: 'login',
+    };
+  },
   computed: {
-    authModalShow() {
-      return this.$store.getters.authModalShow;
-    },
+    /* ...mapState({
+      modal: 'authModalShow',
+    }), */
+    ...mapState(['authModalShow']),
+  },
+  methods: {
+    ...mapMutations(['toggleAuthModal']),
   },
 };
 </script>
